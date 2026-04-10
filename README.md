@@ -10,5 +10,5 @@
 官方文档 | https://docs.langchain.com/oss/python/langchain/install              
 安装langchain | pip install -U langchain -i https://pypi.tuna.tsinghua.edu.cn/simple
 安装langchain-deepseek | pip install -U langchain-deepseek -i https://pypi.tuna.tsinghua.edu.cn/simple
-导出包 | pip freeze > requirements.txt                         
+导出包 | pip freeze > requirements.txt
 安装包 | `pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`<br/>或<br/>`pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/`

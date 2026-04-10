@@ -1,14 +1,12 @@
 from dotenv import load_dotenv
+import operator
+from typing import Literal
+from typing_extensions import TypedDict, Annotated
+
 from langchain.tools import tool
 from langchain.chat_models import init_chat_model
-from langchain.messages import AnyMessage
-from typing_extensions import TypedDict, Annotated
-import operator
-from langchain.messages import SystemMessage
-from langchain.messages import ToolMessage
-from typing import Literal
+from langchain.messages import AnyMessage, SystemMessage, ToolMessage, HumanMessage
 from langgraph.graph import StateGraph, START, END
-from langchain.messages import HumanMessage
 
 load_dotenv()
 
@@ -61,7 +59,7 @@ model_with_tools = model.bind_tools(tools)
 
 # 2. Define state
 class MessagesState(TypedDict):
-    messages: Annotated[list[AnyMessage], operator.add]
+    messages: Annotated[list[AnyMessage], operator.add]  # 这个字段是一个消息列表，当多个节点同时更新它时，不要把旧数据覆盖掉，而是把新旧数据拼接到一起（追加）。
     llm_calls: int
 
 
@@ -93,6 +91,7 @@ def tool_node(state: dict):
         tool = tools_by_name[tool_call["name"]]
         observation = tool.invoke(tool_call["args"])
         result.append(ToolMessage(content=observation, tool_call_id=tool_call["id"]))
+    print(f"tool_node() result: {result}\n")
     return {"messages": result}
 
 
@@ -102,6 +101,7 @@ def should_continue(state: MessagesState) -> Literal["tool_node", END]:
 
     messages = state["messages"]
     last_message = messages[-1]
+    print(f"should_continue() last_message: {last_message}\n")
 
     # If the LLM makes a tool call, then perform an action
     if last_message.tool_calls:
