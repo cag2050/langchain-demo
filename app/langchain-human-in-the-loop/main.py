@@ -79,6 +79,8 @@ response1 = agent.invoke(
 print(f"response1: {response1}\n")
 print(f"response1.interrupts: {response1.interrupts}\n")
 
+# 不能直接在一个已经暂停的 stream 对象里“写入”数据。需要发起第二次调用。
+# 当你调用 Command(resume=...) 时，LangGraph 的 Checkpointer 会根据 thread_id 找到上次暂停时的内存快照，把 human_decision 赋值给代码中 interrupt() 函数的返回值，然后从那一行代码继续往下执行。
 # Resume with approval decision
 response2 = agent.invoke(
     Command(
