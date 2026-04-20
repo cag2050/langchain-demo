@@ -4,3 +4,4 @@ __pycache__/
 *$py.class
 .env
 chroma_db/
+Chinook.db
